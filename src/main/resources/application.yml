@@ -1,3 +1,16 @@
 spring:
   application:
     name: amadda
+  cloud:
+    config:
+      uri: http://127.0.0.1:8888
+      fail-fast: true
+      name: amadda
+
+server:
+  port: 8761
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
