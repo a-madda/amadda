@@ -1,0 +1,9 @@
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: ENC(GEJQZl/K+GfS7may0ctwGxadFdLRTxAUfqRcV4zdOA4YmfltyYz9bEk9sH1XAKwwKZeXJINo4H13+U14V3vbawqVG0eZG+qw)
+          default-label: main
+          username: ENC(hxVbVM/X06a1lJ9pFN7YVrIWmwsSLnLf1pDwpTr8vjU=)
+          password: ENC(UD9BmxTRQwwFMnA9NosDSjt+t+l5Z8BSCZfkzMqGPq1rbRqinNb46R6o5Ujx1HxtYEnzdkgds2WBZIivz8ptBQ==)

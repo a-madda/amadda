@@ -1,0 +1,26 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: config-service
+  cloud:
+    config:
+      server:
+        bootstrap: true
+  profiles:
+    active: default
+    group:
+      default:
+        - local
+
+jasypt:
+  encryptor:
+    password: password
+    algorithm: PBEWithSHA1AndDESede
+    provider-class-name: org.bouncycastle.jce.provider.BouncyCastleProvider
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, busrefresh, refresh, beans, httptrace, busrefresh, info, metrics, prometheus
