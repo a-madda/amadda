@@ -41,9 +41,9 @@ public class JwtAuthenticationTokenFilter implements GlobalFilter {
                         : List.of()
                         : List.of();
                     log.error("userId : {} role : {}", userId, roles);
+                    String token = exchange.getRequest().getHeaders().getFirst("Authorization");
                     ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
-                        .header("X-User-Id", userId)
-                        .header("X-User-Role", String.join(",",roles))
+                        .header("Authorization", token)
                         .build();
 
                     return chain.filter(exchange.mutate().request(mutatedRequest).build());
