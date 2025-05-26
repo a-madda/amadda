@@ -5,3 +5,10 @@ spring:
   data:
     redis:
       port: 6379
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: false
+  thymeleaf:
+    cache: false
