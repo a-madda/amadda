@@ -1,0 +1,7 @@
+server:
+  port: 9901
+
+spring:
+  data:
+    redis:
+      port: 6379
