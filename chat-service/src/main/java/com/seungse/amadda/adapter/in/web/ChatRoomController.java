@@ -48,7 +48,7 @@ public class ChatRoomController {
     @GetMapping("/room/{roomId}")
     @ResponseBody
     public ChatRoom getRoom(@PathVariable(value = "roomId") String roomId) {
-        return chatRoomRepository.findChatRoom(Integer.parseInt(roomId))
+        return chatRoomRepository.findChatRoom(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("Chat room not found: " + roomId));
     }
 

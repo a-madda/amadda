@@ -16,8 +16,8 @@ public class ChatRoomRepository {
         return chatRooms;
     }
 
-    public Optional<ChatRoom> findChatRoom(int roomId) {
-        return Optional.ofNullable(chatRoomMap.get(String.valueOf(roomId)));
+    public Optional<ChatRoom> findChatRoom(String roomId) {
+        return Optional.ofNullable(chatRoomMap.get(roomId));
     }
 
     public ChatRoom save(String name) {

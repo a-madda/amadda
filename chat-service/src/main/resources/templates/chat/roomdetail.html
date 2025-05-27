@@ -56,11 +56,14 @@
             const sender = ref("");
             const message = ref("");
             const messages = ref([]);
+            roomId.value = localStorage.getItem('wschat.roomId');
+            sender.value = localStorage.getItem('wschat.sender');
             const findRoom = () => {
                 axios.get('/chat/room/' + roomId.value).then(response => {
                     room.value = response.data;
                 });
             };
+            findRoom();
             const sendMessage = () => {
                 ws.send("/pub/chat/message", {}, JSON.stringify({type: 'TALK', roomId: roomId.value, sender: sender.value, message: message.value}));
                 message.value = '';
