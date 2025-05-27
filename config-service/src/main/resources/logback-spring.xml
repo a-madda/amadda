@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <springProperty name="LOG_FILE_NAME" source="spring.application.name" defaultValue="config-service"/>
     <include resource="logback-common.xml"/>
 
     <!-- 서비스 특화 로그 레벨 (필요 시 추가) -->

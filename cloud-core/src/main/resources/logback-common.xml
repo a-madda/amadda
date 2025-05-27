@@ -5,7 +5,6 @@
 
     <!-- 공통 속성 설정 -->
     <property name="LOG_PATH" value="./logs"/>
-    <property name="LOG_FILE_NAME" value="${spring.application.name:-default-service}"/>
 
     <!-- 콘솔 로그 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -24,7 +23,7 @@
             <maxHistory>14</maxHistory>
         </rollingPolicy>
 
-        <encoder>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
             <pattern>
                 {
                     "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ}",
