@@ -1,6 +1,10 @@
 package com.seungse.amadda.adapter.out.persistance;
 
+import com.seungse.amadda.application.port.out.ChatOutPort;
+import com.seungse.amadda.domain.ChatMessage;
 import com.seungse.amadda.domain.ChatRoom;
+import com.seungse.amadda.domain.MessageType;
+import com.seungse.amadda.infrastructor.publisher.RedisPublisher;
 import com.seungse.amadda.infrastructor.subscriber.RedisSubscriber;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +18,11 @@ import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
-public class ChatRoomRepository {
+public class ChatOutPortAdapter implements ChatOutPort {
 
+
+    private final RedisPublisher redisPublisher;
+    private final ChatOutPortAdapter chatOutPortAdapter;
     private final RedisMessageListenerContainer redisMessageListenerContainer;
     private final RedisSubscriber redisSubscriber;
     private static final String CHAT_ROOM_CHANNEL = "chatRoomChannel";
@@ -43,22 +50,25 @@ public class ChatRoomRepository {
         }
     }
 
-    public ChannelTopic getTopic(String roomId) {
+    @Override
+    public void sendMessage(ChatMessage chatMessage) {
+        if(MessageType.ENTER.equals(chatMessage.getType())) {
+            chatOutPortAdapter.enterChatRoom(chatMessage.getRoomId());
+            chatMessage.setMessage(chatMessage.getSender() + "님이 입장하셨습니다.");
+        }
+        redisPublisher.publish(this.getTopic(chatMessage.getRoomId()), chatMessage);
+    }
+
+    private ChannelTopic getTopic(String roomId) {
         return topics.computeIfAbsent(roomId, ChannelTopic::new);
     }
 
-    public List<ChatRoom> findAllRoom() {
+    public List<ChatRoom> getAllChatRooms() {
         return hashOperations.values(CHAT_ROOM_CHANNEL);
     }
 
-    public Optional<ChatRoom> findChatRoom(String roomId) {
+    public Optional<ChatRoom> getChatRoom(String roomId) {
         return Optional.ofNullable(hashOperations.get(CHAT_ROOM_CHANNEL, roomId));
-    }
-
-    public ChatRoom save(String name) {
-        ChatRoom chatRoom = ChatRoom.create(name);
-        hashOperations.put(CHAT_ROOM_CHANNEL, chatRoom.getRoomId(), chatRoom);
-        return chatRoom;
     }
 
 }
