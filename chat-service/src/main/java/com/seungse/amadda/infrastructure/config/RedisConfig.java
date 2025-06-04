@@ -1,4 +1,4 @@
-package com.seungse.amadda.infrastructor.config;
+package com.seungse.amadda.infrastructure.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

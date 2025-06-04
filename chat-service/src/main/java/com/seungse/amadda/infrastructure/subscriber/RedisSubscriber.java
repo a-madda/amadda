@@ -1,4 +1,4 @@
-package com.seungse.amadda.infrastructor.subscriber;
+package com.seungse.amadda.infrastructure.subscriber;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seungse.amadda.domain.ChatMessage;

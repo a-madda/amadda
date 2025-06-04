@@ -1,6 +1,5 @@
 package com.seungse.amadda.adapter.in.web;
 
-import com.seungse.amadda.adapter.out.persistance.ChatOutPortAdapter;
 import com.seungse.amadda.application.port.in.ChatUseCase;
 import com.seungse.amadda.domain.ChatRoom;
 import lombok.RequiredArgsConstructor;
