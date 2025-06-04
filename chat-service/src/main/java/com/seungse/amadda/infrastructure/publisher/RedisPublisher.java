@@ -1,4 +1,4 @@
-package com.seungse.amadda.infrastructor.publisher;
+package com.seungse.amadda.infrastructure.publisher;
 
 import com.seungse.amadda.domain.ChatMessage;
 import lombok.RequiredArgsConstructor;

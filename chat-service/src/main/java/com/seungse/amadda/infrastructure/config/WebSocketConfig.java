@@ -1,6 +1,6 @@
-package com.seungse.amadda.infrastructor.config;
+package com.seungse.amadda.infrastructure.config;
 
-import com.seungse.amadda.infrastructor.interceptor.StompInterceptor;
+import com.seungse.amadda.infrastructure.interceptor.StompInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
