@@ -27,7 +27,7 @@ public class RegisteredAccountResponse {
         return RegisteredAccountResponse.builder()
                 .accountId(account.id())
                 .email(account.email())
-                .name(account.name())
+                .name(account.phone())
                 .status(AccountStatus.from(account.accountStatus().name()))
                 .build();
     }

@@ -25,7 +25,7 @@ public class AccountEntity {
     private Long id;
     private String accountNo;
     private String email;
-    private String name;
+    private String phone;
     @Enumerated(EnumType.STRING)
     private AccountStatus accountStatus;
     @Enumerated(EnumType.STRING)
@@ -41,7 +41,7 @@ public class AccountEntity {
                 .id(account.id())
                 .accountNo(UUID.randomUUID().toString())
                 .email(account.email())
-                .name(account.name())
+                .phone(account.phone())
                 .accountStatus(AccountStatus.PENDING)
                 .build();
     }
@@ -51,7 +51,7 @@ public class AccountEntity {
                 .id(this.id)
                 .accountNo(this.accountNo)
                 .email(this.email)
-                .name(this.name)
+                .phone(this.phone)
                 .accountStatus(this.accountStatus)
                 .build();
     }
