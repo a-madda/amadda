@@ -1,6 +1,5 @@
 package com.seungse.amadda.application.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seungse.amadda.application.port.in.ChatUseCase;
 import com.seungse.amadda.application.port.out.ChatOutPort;
 import com.seungse.amadda.domain.ChatMessage;
