@@ -1,5 +1,6 @@
 dependencies {
     implementation(project(mapOf("path" to ":cloud-core")))
+    implementation(project(mapOf("path" to ":jpa-core")))
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.kafka:spring-kafka")
@@ -17,4 +18,6 @@ dependencies {
     // https://mvnrepository.com/artifact/org.webjars/stomp-websocket
     implementation("org.webjars:stomp-websocket:2.3.4")
     "developmentOnly"("org.springframework.boot:spring-boot-devtools")
+    runtimeOnly("org.postgresql:postgresql")
+
 }
