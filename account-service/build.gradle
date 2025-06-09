@@ -10,6 +10,9 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    // https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client
+    implementation("org.keycloak:keycloak-admin-client:26.0.5")
+
     testImplementation 'org.springframework.security:spring-security-test'
 //    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     annotationProcessor 'org.projectlombok:lombok'
