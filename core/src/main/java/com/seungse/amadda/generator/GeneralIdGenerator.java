@@ -5,8 +5,8 @@ import lombok.NoArgsConstructor;
 
 import java.security.SecureRandom;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class GeneralIdGenarator {
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+public class GeneralIdGenerator {
 
     // starts at the year 2010
     private static final long EPOCH_MILLIS = 1262304000000L;
@@ -21,5 +21,5 @@ public class GeneralIdGenarator {
         long time = System.currentTimeMillis() - EPOCH_MILLIS;
         return (time << TIMESTAMP_SHIFT) + random.nextInt(MAX_RANDOM);
     }
-    
+
 }
