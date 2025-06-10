@@ -46,12 +46,12 @@ public class AccountRegisterOutPortV1Adapter implements AccountRegisterOutPortV1
      */
     @Override
     public Optional<Account> createAccount(Account account, String password) {
-        AccountEntity accountEntity = AccountEntity.newEntityFrom(account);
+        KeyCloakAccount keyCloakAccount = KeyCloakAccount.newAccountFrom(account);
 
         RealmResource realm = keycloak.realm(keyCloakProperties.getRealm());
         UsersResource usersResource = realm.users();
 
-        try (Response result = createUser(accountEntity, usersResource)) {
+        try (Response result = createUser(keyCloakAccount, usersResource)) {
             if (result.getStatusInfo().toEnum() == Response.Status.CREATED) {
                 CredentialRepresentation credential = new CredentialRepresentation();
                 credential.setType(CredentialRepresentation.PASSWORD);
@@ -63,17 +63,23 @@ public class AccountRegisterOutPortV1Adapter implements AccountRegisterOutPortV1
             }
         }
 
-
-        return Optional.of(accountEntity.toDomain());
+        return Optional.of(keyCloakAccount.toDomain());
     }
 
-    private Response createUser(AccountEntity accountEntity, UsersResource usersResource) {
+    /**
+     * 사용자 생성
+     *
+     * @param keyCloakAccount
+     * @param usersResource
+     * @return
+     */
+    private Response createUser(KeyCloakAccount keyCloakAccount, UsersResource usersResource) {
         UserRepresentation user = new UserRepresentation();
-        user.setEmail(accountEntity.getEmail());
+        user.setEmail(keyCloakAccount.getEmail());
         user.setEnabled(true);
 
         Map<String, List<String>> attributes = new HashMap<>();
-        attributes.put("phone", List.of(accountEntity.getPhone()));
+        attributes.put("phone", List.of(keyCloakAccount.getPhone()));
         user.setAttributes(attributes);
 
         return usersResource.create(user);
