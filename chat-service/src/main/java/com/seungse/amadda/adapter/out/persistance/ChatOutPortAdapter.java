@@ -56,6 +56,7 @@ public class ChatOutPortAdapter implements ChatOutPort {
             chatOutPortAdapter.enterChatRoom(chatMessage.getRoomId());
             chatMessage.setMessage(chatMessage.getSender() + "님이 입장하셨습니다.");
         }
+        chatMessage.setSentTime();
         redisPublisher.publish(this.getTopic(chatMessage.getRoomId()), chatMessage);
     }
 
