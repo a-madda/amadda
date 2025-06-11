@@ -4,6 +4,7 @@ import com.seungse.amadda.accountservice.application.port.in.AccountRegisterComm
 import com.seungse.amadda.accountservice.application.port.in.AccountRegisterUseCaseV1;
 import com.seungse.amadda.accountservice.application.port.out.AccountRegisterOutPortV1;
 import com.seungse.amadda.accountservice.domain.Account;
+import com.seungse.amadda.accountservice.infrastructor.advice.exceptions.AlreadyExistEmailException;
 import com.seungse.amadda.accountservice.infrastructor.annotations.UseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +27,7 @@ public class AccountRegisterServiceV1 implements AccountRegisterUseCaseV1 {
     public Optional<Account> registerAccount(AccountRegisterCommandV1 command) {
         if (accountRegisterOutPort.isExistAccount(command.getEmail())) {
             log.info("Email already exist :{}", command.getEmail());
-//            throw new IllegalAccessException("이미 가입한 이메일 계정이 있습니다.");
-            return Optional.empty();
+            throw new AlreadyExistEmailException();
         }
         return accountRegisterOutPort.createAccount(command.mapToDomain(), command.getPassword());
     }

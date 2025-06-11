@@ -16,7 +16,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class AccountRegisterCommandV1 extends SelfValidating<AccountRegisterCommandV1> {
 
     @Email
@@ -46,6 +46,8 @@ public class AccountRegisterCommandV1 extends SelfValidating<AccountRegisterComm
     public Account mapToDomain() {
         return Account.builder()
                 .email(this.email)
+                .phone(this.phone)
+                .password(this.password)
                 .build();
     }
 

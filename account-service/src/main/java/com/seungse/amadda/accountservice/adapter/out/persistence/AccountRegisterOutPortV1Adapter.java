@@ -6,11 +6,14 @@ import com.seungse.amadda.accountservice.infrastructor.annotations.OutPortAdapte
 import com.seungse.amadda.accountservice.infrastructor.config.KeyCloakProperties;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.authorization.client.AuthzClient;
+import org.keycloak.authorization.client.Configuration;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
@@ -30,6 +33,7 @@ import java.util.Optional;
  *
  * @author seungse
  */
+@Slf4j
 @OutPortAdapter
 @RequiredArgsConstructor
 public class AccountRegisterOutPortV1Adapter implements AccountRegisterOutPortV1 {
@@ -60,10 +64,27 @@ public class AccountRegisterOutPortV1Adapter implements AccountRegisterOutPortV1
                 String userId = CreatedResponseUtil.getCreatedId(result);
                 UserResource userResource = usersResource.get(userId);
                 userResource.resetPassword(credential);
+
+                Map<String, Object> clientCredentials = new HashMap<>();
+                clientCredentials.put("secret", keyCloakProperties.getClientSecret());
+                clientCredentials.put("grant_type", "password");
+
+                Configuration configuration =
+                        new Configuration(keyCloakProperties.getServerUrl(), keyCloakProperties.getRealm(), keyCloakProperties.getClientId(), clientCredentials, null);
+                AuthzClient authzClient = AuthzClient.create(configuration);
             }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
 
         return Optional.of(keyCloakAccount.toDomain());
+    }
+
+    /**
+     * 토큰 가져오기
+     */
+    private void getAccessToken() {
+
     }
 
     /**
@@ -76,6 +97,7 @@ public class AccountRegisterOutPortV1Adapter implements AccountRegisterOutPortV1
     private Response createUser(KeyCloakAccount keyCloakAccount, UsersResource usersResource) {
         UserRepresentation user = new UserRepresentation();
         user.setEmail(keyCloakAccount.getEmail());
+        user.setUsername(keyCloakAccount.getEmail());
         user.setEnabled(true);
 
         Map<String, List<String>> attributes = new HashMap<>();
@@ -93,7 +115,7 @@ public class AccountRegisterOutPortV1Adapter implements AccountRegisterOutPortV1
      */
     @Override
     public boolean isExistAccount(String email) {
-        List<UserRepresentation> search = keycloak.realm(keyCloakProperties.getRealm()).users().searchByEmail(email, true);
+        List<UserRepresentation> search = keycloak.realm(keyCloakProperties.getRealm()).users().searchByEmail(email, false);
 
         return !search.isEmpty();
     }

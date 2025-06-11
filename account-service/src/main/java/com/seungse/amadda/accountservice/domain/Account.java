@@ -8,6 +8,7 @@ public record Account(
         String accountNo,
         String email,
         String phone,
+        String password,
         AccountStatus accountStatus
 ) {
 
