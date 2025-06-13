@@ -5,8 +5,6 @@ import java.util.Optional;
 
 public interface ChatRoomRepository<T, E> {
 
-    List<T> findAllByParticipantId(Long participantId);
-
     /**
      * 채팅방을 생성합니다.
      *

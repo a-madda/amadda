@@ -1,5 +1,7 @@
 package com.seungse.amadda.adapter.out.persistance;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.seungse.amadda.adapter.out.produce.MessageProducer;
 import com.seungse.amadda.application.port.out.ChatOutPort;
 import com.seungse.amadda.domain.ChatMessage;
 import com.seungse.amadda.domain.ChatRoom;
@@ -22,13 +24,13 @@ public class ChatOutPortAdapter implements ChatOutPort {
 
 
     private final RedisPublisher redisPublisher;
-    private final ChatOutPortAdapter chatOutPortAdapter;
     private final RedisMessageListenerContainer redisMessageListenerContainer;
     private final RedisSubscriber redisSubscriber;
     private static final String CHAT_ROOM_CHANNEL = "chatRoomChannel";
     private final RedisTemplate<String, Object> redisTemplate;
     private HashOperations<String, String, ChatRoom> hashOperations;
     private Map<String, ChannelTopic> topics = new LinkedHashMap<>();
+    private final MessageProducer messageProducer;
 
     @PostConstruct
     public void init() {
@@ -53,11 +55,16 @@ public class ChatOutPortAdapter implements ChatOutPort {
     @Override
     public void sendMessage(ChatMessage chatMessage) {
         if(MessageType.ENTER.equals(chatMessage.getType())) {
-            chatOutPortAdapter.enterChatRoom(chatMessage.getRoomId());
+            enterChatRoom(chatMessage.getRoomId());
             chatMessage.setMessage(chatMessage.getSender() + "님이 입장하셨습니다.");
         }
         chatMessage.setSentTime();
         redisPublisher.publish(this.getTopic(chatMessage.getRoomId()), chatMessage);
+        try {
+            messageProducer.produce(chatMessage);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to produce message", e);
+        }
     }
 
     private ChannelTopic getTopic(String roomId) {
