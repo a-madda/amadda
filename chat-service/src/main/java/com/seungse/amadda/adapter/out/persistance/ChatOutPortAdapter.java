@@ -1,5 +1,7 @@
 package com.seungse.amadda.adapter.out.persistance;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.seungse.amadda.adapter.out.produce.MessageProducer;
 import com.seungse.amadda.application.port.out.ChatOutPort;
 import com.seungse.amadda.domain.ChatMessage;
 import com.seungse.amadda.domain.ChatRoom;
@@ -8,6 +10,7 @@ import com.seungse.amadda.infrastructure.publisher.RedisPublisher;
 import com.seungse.amadda.infrastructure.subscriber.RedisSubscriber;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -16,19 +19,20 @@ import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class ChatOutPortAdapter implements ChatOutPort {
 
 
     private final RedisPublisher redisPublisher;
-    private final ChatOutPortAdapter chatOutPortAdapter;
     private final RedisMessageListenerContainer redisMessageListenerContainer;
     private final RedisSubscriber redisSubscriber;
     private static final String CHAT_ROOM_CHANNEL = "chatRoomChannel";
     private final RedisTemplate<String, Object> redisTemplate;
     private HashOperations<String, String, ChatRoom> hashOperations;
-    private Map<String, ChannelTopic> topics = new LinkedHashMap<>();
+    private final Map<String, ChannelTopic> topics = new LinkedHashMap<>();
+    private final MessageProducer messageProducer;
 
     @PostConstruct
     public void init() {
@@ -43,20 +47,27 @@ public class ChatOutPortAdapter implements ChatOutPort {
 
     public void enterChatRoom(String roomId) {
         ChannelTopic topic = this.topics.get(roomId);
-        if(topic != null) {
-            topic = new ChannelTopic(roomId);
-            redisMessageListenerContainer.addMessageListener(redisSubscriber, topic);
+        this.topics.computeIfPresent( roomId, (key, value) -> {
+            value = new ChannelTopic(roomId);
+            redisMessageListenerContainer.addMessageListener(redisSubscriber, value);
             topics.put(roomId, topic);
-        }
+            return value;
+        });
     }
 
     @Override
     public void sendMessage(ChatMessage chatMessage) {
         if(MessageType.ENTER.equals(chatMessage.getType())) {
-            chatOutPortAdapter.enterChatRoom(chatMessage.getRoomId());
+            enterChatRoom(chatMessage.getRoomId());
             chatMessage.setMessage(chatMessage.getSender() + "님이 입장하셨습니다.");
         }
         chatMessage.setSentTime();
+        try {
+            messageProducer.produce(chatMessage);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to produce message", e);
+        }
+        log.info("sending message: {}", chatMessage);
         redisPublisher.publish(this.getTopic(chatMessage.getRoomId()), chatMessage);
     }
 

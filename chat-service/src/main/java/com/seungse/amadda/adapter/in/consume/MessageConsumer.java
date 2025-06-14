@@ -14,7 +14,7 @@ public class MessageConsumer {
 
     private final ObjectMapper objectMapper;
 
-    @KafkaListener(topics = "${spring.kafka.consumer.topic}", groupId = "${spring.kafka.consumer.group-id}")
+    @KafkaListener(topics = "${spring.kafka.topic.chat}")
     public void consumeMessage(String message) {
         try {
             ChatMessage chatMessage = objectMapper.readValue(message, ChatMessage.class);

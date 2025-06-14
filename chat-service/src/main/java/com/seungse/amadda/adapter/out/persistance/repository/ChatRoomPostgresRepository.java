@@ -8,7 +8,4 @@ import java.util.List;
 
 public interface ChatRoomPostgresRepository extends ChatRoomRepository<ChatRoomEntity, Long>, JpaRepository<ChatRoomEntity, Long> {
 
-    @Override
-    List<ChatRoomEntity> findAllByParticipantId(Long participantId);
-
 }
