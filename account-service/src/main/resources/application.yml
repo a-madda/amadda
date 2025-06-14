@@ -12,5 +12,12 @@ eureka:
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka/
       # defaultZone: http://localhost:8762/eureka/, http://local.amadda.com:8763/eureka
+keycloak:
+  serverUrl:
+  realm:
+  clientId:
+  clientSecret:
+  username:
+  password:
 server:
   port: 0

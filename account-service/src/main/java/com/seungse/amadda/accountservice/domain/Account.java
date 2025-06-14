@@ -4,11 +4,12 @@ import lombok.Builder;
 
 @Builder
 public record Account(
-    Long id,
-    String accountNo,
-    String email,
-    String name,
-    AccountStatus accountStatus
+        Long id,
+        String accountNo,
+        String email,
+        String phone,
+        String password,
+        AccountStatus accountStatus
 ) {
 
 }
