@@ -10,6 +10,7 @@ import com.seungse.amadda.infrastructure.publisher.RedisPublisher;
 import com.seungse.amadda.infrastructure.subscriber.RedisSubscriber;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class ChatOutPortAdapter implements ChatOutPort {
@@ -29,7 +31,7 @@ public class ChatOutPortAdapter implements ChatOutPort {
     private static final String CHAT_ROOM_CHANNEL = "chatRoomChannel";
     private final RedisTemplate<String, Object> redisTemplate;
     private HashOperations<String, String, ChatRoom> hashOperations;
-    private Map<String, ChannelTopic> topics = new LinkedHashMap<>();
+    private final Map<String, ChannelTopic> topics = new LinkedHashMap<>();
     private final MessageProducer messageProducer;
 
     @PostConstruct
@@ -45,11 +47,12 @@ public class ChatOutPortAdapter implements ChatOutPort {
 
     public void enterChatRoom(String roomId) {
         ChannelTopic topic = this.topics.get(roomId);
-        if(topic != null) {
-            topic = new ChannelTopic(roomId);
-            redisMessageListenerContainer.addMessageListener(redisSubscriber, topic);
+        this.topics.computeIfPresent( roomId, (key, value) -> {
+            value = new ChannelTopic(roomId);
+            redisMessageListenerContainer.addMessageListener(redisSubscriber, value);
             topics.put(roomId, topic);
-        }
+            return value;
+        });
     }
 
     @Override
@@ -59,12 +62,13 @@ public class ChatOutPortAdapter implements ChatOutPort {
             chatMessage.setMessage(chatMessage.getSender() + "님이 입장하셨습니다.");
         }
         chatMessage.setSentTime();
+        log.info("sending message: {}", chatMessage);
         redisPublisher.publish(this.getTopic(chatMessage.getRoomId()), chatMessage);
-        try {
+        /*try {
             messageProducer.produce(chatMessage);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Failed to produce message", e);
-        }
+        }*/
     }
 
     private ChannelTopic getTopic(String roomId) {

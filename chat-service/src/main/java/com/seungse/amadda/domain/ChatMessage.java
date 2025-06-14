@@ -4,7 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Getter
 @Setter
@@ -32,10 +34,10 @@ public class ChatMessage {
     /**
      * 메시지 전송 시간
      */
-    private LocalDateTime sentAt;
+    private String sentAt;
 
     public void setSentTime() {
-        this.sentAt = LocalDateTime.now();
+        this.sentAt = Instant.now().toString();
     }
 
 }
