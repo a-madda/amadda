@@ -62,13 +62,13 @@ public class ChatOutPortAdapter implements ChatOutPort {
             chatMessage.setMessage(chatMessage.getSender() + "님이 입장하셨습니다.");
         }
         chatMessage.setSentTime();
-        log.info("sending message: {}", chatMessage);
-        redisPublisher.publish(this.getTopic(chatMessage.getRoomId()), chatMessage);
-        /*try {
+        try {
             messageProducer.produce(chatMessage);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Failed to produce message", e);
-        }*/
+        }
+        log.info("sending message: {}", chatMessage);
+        redisPublisher.publish(this.getTopic(chatMessage.getRoomId()), chatMessage);
     }
 
     private ChannelTopic getTopic(String roomId) {
