@@ -60,6 +60,7 @@ public class AccountRegisterOutPortV1Adapter implements AccountRegisterOutPortV1
                 CredentialRepresentation credential = new CredentialRepresentation();
                 credential.setType(CredentialRepresentation.PASSWORD);
                 credential.setValue(password);
+                credential.setTemporary(false);
 
                 String userId = CreatedResponseUtil.getCreatedId(result);
                 UserResource userResource = usersResource.get(userId);
@@ -78,13 +79,6 @@ public class AccountRegisterOutPortV1Adapter implements AccountRegisterOutPortV1
         }
 
         return Optional.of(keyCloakAccount.toDomain());
-    }
-
-    /**
-     * 토큰 가져오기
-     */
-    private void getAccessToken() {
-
     }
 
     /**
@@ -107,17 +101,5 @@ public class AccountRegisterOutPortV1Adapter implements AccountRegisterOutPortV1
         return usersResource.create(user);
     }
 
-    /**
-     * 계정 존재여부 확인
-     *
-     * @param email 이메일
-     * @return boolean 존재여부 결과
-     */
-    @Override
-    public boolean isExistAccount(String email) {
-        List<UserRepresentation> search = keycloak.realm(keyCloakProperties.getRealm()).users().searchByEmail(email, false);
-
-        return !search.isEmpty();
-    }
 
 }
