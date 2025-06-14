@@ -17,5 +17,7 @@ keycloak:
   realm:
   clientId:
   clientSecret:
+  username:
+  password:
 server:
   port: 0

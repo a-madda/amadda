@@ -22,8 +22,8 @@ public class KeyCloakConfig {
                 .clientId(keyCloakProperties.getClientId())
                 .clientSecret(keyCloakProperties.getClientSecret())
                 .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
-                .username("admin")
-                .password("password")
+                .username(keyCloakProperties.getUsername())
+                .password(keyCloakProperties.getPassword())
                 .build();
     }
 }
