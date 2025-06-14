@@ -19,7 +19,7 @@ public class RegisteredAccountResponse {
 
     private String email;
 
-    private String name;
+    private String phone;
 
     private AccountStatus status;
 
@@ -27,7 +27,7 @@ public class RegisteredAccountResponse {
         return RegisteredAccountResponse.builder()
                 .accountId(account.id())
                 .email(account.email())
-                .name(account.phone())
+                .phone(account.phone())
                 .status(AccountStatus.from(account.accountStatus().name()))
                 .build();
     }
