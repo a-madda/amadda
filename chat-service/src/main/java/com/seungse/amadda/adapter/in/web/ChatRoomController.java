@@ -1,6 +1,6 @@
 package com.seungse.amadda.adapter.in.web;
 
-import com.seungse.amadda.adapter.out.persistance.ChatRoomRepository;
+import com.seungse.amadda.application.port.in.ChatUseCase;
 import com.seungse.amadda.domain.ChatRoom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/chat")
 public class ChatRoomController {
 
-    private final ChatRoomRepository chatRoomRepository;
+    private final ChatUseCase chatUseCase;
 
     @GetMapping("/room")
     public String chatRoom() {
@@ -24,13 +24,13 @@ public class ChatRoomController {
     @GetMapping("/rooms")
     @ResponseBody
     public List<ChatRoom> room() {
-        return chatRoomRepository.findAllRoom();
+        return chatUseCase.getAllChatRooms();
     }
 
     @PostMapping("/room")
     @ResponseBody
     public ChatRoom createRoom(@RequestParam(value = "name") String name) {
-        return chatRoomRepository.save(name);
+        return chatUseCase.createChatRoom(name);
     }
 
     /**
@@ -48,7 +48,7 @@ public class ChatRoomController {
     @GetMapping("/room/{roomId}")
     @ResponseBody
     public ChatRoom getRoom(@PathVariable(value = "roomId") String roomId) {
-        return chatRoomRepository.findChatRoom(roomId)
+        return chatUseCase.getChatRoom(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("Chat room not found: " + roomId));
     }
 
