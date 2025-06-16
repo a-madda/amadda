@@ -16,7 +16,7 @@ public record AuthToken(
         return new AuthToken(accessTokenResponse.getToken(),
                 accessTokenResponse.getRefreshToken(),
                 accessTokenResponse.getTokenType(),
-                accessTokenResponse.getExpiresIn(),
+                accessTokenResponse.getRefreshExpiresIn(),
                 accessTokenResponse.getExpiresIn());
     }
 }

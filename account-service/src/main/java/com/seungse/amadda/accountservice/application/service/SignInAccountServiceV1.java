@@ -23,7 +23,7 @@ public class SignInAccountServiceV1 implements SignInAccountUseCaseV1 {
     @Override
     public Optional<AuthToken> loginAccount(SignInAccountCommandV1 signInAccountCommandV1) {
         if (accountValidationOutPort.isNotExistAccount(signInAccountCommandV1.getEmail())) {
-            log.info("Email already exist :{}", signInAccountCommandV1.getEmail());
+            log.info("Account does not exist for email: {}", signInAccountCommandV1.getEmail());
             throw new AccountException();
         }
 
