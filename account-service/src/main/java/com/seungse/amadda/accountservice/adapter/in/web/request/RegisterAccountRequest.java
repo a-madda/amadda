@@ -15,9 +15,9 @@ public class RegisterAccountRequest {
      */
     private String email;
     /**
-     * 이름
+     * 전화번호
      */
-    private String name;
+    private String phone;
     /**
      * 비밀번호
      */
@@ -30,7 +30,7 @@ public class RegisterAccountRequest {
     public AccountRegisterCommandV1 mapToCommand() {
         return AccountRegisterCommandV1.builder()
                 .email(email)
-                .name(name)
+                .phone(phone)
                 .password(password)
                 .passwordConfirm(passwordConfirm)
                 .build();

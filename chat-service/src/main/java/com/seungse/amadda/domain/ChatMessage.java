@@ -2,9 +2,14 @@ package com.seungse.amadda.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@ToString
 public class ChatMessage {
 
     /**
@@ -23,5 +28,15 @@ public class ChatMessage {
      * 메시지 내용
      */
     private String message;
+
+
+    /**
+     * 메시지 전송 시간
+     */
+    private String sentAt;
+
+    public void setSentTime() {
+        this.sentAt = Instant.now().toString();
+    }
 
 }

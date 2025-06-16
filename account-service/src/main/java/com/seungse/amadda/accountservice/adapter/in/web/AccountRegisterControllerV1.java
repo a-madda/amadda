@@ -18,6 +18,12 @@ public class AccountRegisterControllerV1 {
 
     private final AccountRegisterUseCaseV1 accountRegisterUseCaseV1;
 
+    /**
+     * 회원가입
+     *
+     * @param request
+     * @return
+     */
     @PostMapping
     public ResponseEntity<RegisteredAccountResponse> saveAccount(@RequestBody @Valid RegisterAccountRequest request) {
         return ResponseEntity.ok(

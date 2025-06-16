@@ -33,7 +33,12 @@ public enum ErrorCode {
     /**
      * 비밀번호 숫자 오류
      */
-    PASSWORD_NUMBER_ERROR("PASSWORD_NUMBER_ERROR", "비밀번호는 숫자를 포함해야 합니다.");
+    PASSWORD_NUMBER_ERROR("PASSWORD_NUMBER_ERROR", "비밀번호는 숫자를 포함해야 합니다."),
+
+    /**
+     * 이메일 중복 오류
+     */
+    EXIST_EMAIL("EXIST_EMAIL", "이미 가입한 이메일 주소입니다.");
 
     private final String code;
     private final String message;

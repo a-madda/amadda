@@ -12,3 +12,12 @@ spring:
       enabled: false
   thymeleaf:
     cache: false
+  kafka:
+    topic:
+      chat: chat-topic
+      group: chat-group
+    producer:
+      bootstrap-servers: 127.0.0.1:9092
+    config:
+      bootstrap-servers-config: 127.0.0.1:9092
+      group-id-config: chat-service
