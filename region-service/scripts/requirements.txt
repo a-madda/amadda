@@ -1,0 +1,5 @@
+geopandas
+sqlalchemy
+shapely
+psycopg2-binary
+python-dotenv
