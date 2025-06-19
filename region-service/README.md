@@ -12,11 +12,13 @@ Spring Boot 기반의 REST API와, Python 기반의 데이터 초기화 도구�
 
 ## 🐍 Python SHP → PostGIS 변환 도구
 
-`scripts/convert.py`는 다음을 수행합니다:
+`scripts/converter.py`는 다음을 수행합니다:
 - SHP 파일을 읽어 EPSG:4326으로 변환
 - 시도 / 시군구 / 읍면동별 코드 및 계층구조 저장
 - geometry는 `region_geometries`, 메타데이터는 `regions`에 분리 저장
 
+### 🐍 Python 버전
+- Python **3.13.3** 에서 테스트되었습니다.
 
 ### 🔧 실행 방법
 #### 1. 의존성 설치
