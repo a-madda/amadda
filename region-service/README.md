@@ -57,6 +57,20 @@ python converter.py
 | `regions`          | 행정구역 기본정보 (`code`, `name`, `depth`, `parent_code`) |
 | `region_geometries`| 행정구역의 `geometry` 컬럼만 따로 저장                  |
 
+```sql
+CREATE TABLE regions (
+    code TEXT PRIMARY KEY,
+    name TEXT,
+    parent_code TEXT,
+    depth INT
+);
+
+CREATE TABLE region_geometries (
+    code TEXT PRIMARY KEY,
+    geometry GEOMETRY(MultiPolygon, 4326)
+);
+```
+
 --- 
 
 ## Spring Boot API (추가 예정)
