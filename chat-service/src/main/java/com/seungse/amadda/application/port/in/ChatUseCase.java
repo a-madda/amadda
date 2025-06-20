@@ -44,4 +44,12 @@ public interface ChatUseCase {
      */
     Optional<ChatRoom> getChatRoom(String roomId);
 
+    /**
+     * 채팅 메시지 조회
+     *
+     * @param roomId 채팅방 ID
+     * @return 채팅 메시지 목록
+     */
+    List<ChatMessage> getChatMessages(String roomId);
+
 }

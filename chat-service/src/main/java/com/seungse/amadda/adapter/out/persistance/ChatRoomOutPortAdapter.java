@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -64,5 +65,22 @@ public class ChatRoomOutPortAdapter implements ChatRoomSaveOutPort, ChatRoomSear
     @Override
     public boolean existsChatRoom(UUID roomId) {
         return chatRoomPostgresRepository.existsByRoomId(roomId);
+    }
+
+    @Override
+    public Optional<ChatRoom> findChatRoomById(UUID roomId) {
+        Optional<ChatRoomEntity> byRoomId = chatRoomPostgresRepository.findByRoomId(roomId);
+        if (byRoomId.isPresent()) {
+            ChatRoomEntity chatRoomEntity = byRoomId.get();
+            return Optional.of(ChatRoom.builder()
+                    .roomId(chatRoomEntity.getRoomId().toString())
+                    .name(chatRoomEntity.getName())
+                    .chatType(chatRoomEntity.getChatType())
+                    .chats(chatRoomEntity.getMessages().stream()
+                            .map(message -> message.toChatMessage())
+                            .toList())
+                    .build());
+        }
+        return Optional.empty();
     }
 }

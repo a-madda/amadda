@@ -16,6 +16,10 @@ import java.time.ZoneOffset;
 public class ChatMessage {
 
     /**
+     * 메시지 ID
+     */
+    private Long id;
+    /**
      * 메시지 유형
      */
     private MessageType type;

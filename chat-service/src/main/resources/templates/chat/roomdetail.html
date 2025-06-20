@@ -64,6 +64,20 @@
                 });
             };
             findRoom();
+
+            const getMessages = (roomId) => {
+                axios.get(`/chats/${roomId}`).then(response => {
+                    response.data.forEach(msg => {
+                        console.log(msg);
+                        messages.value.unshift({"type": msg.type, "sender": msg.type == 'ENTER' ? '[알림]' : msg.sender, "message": msg.content});
+                    });
+                }).catch(error => {
+                    console.error("Error fetching messages:", error);
+                });
+            }
+
+            getMessages(roomId.value);
+
             const sendMessage = () => {
                 ws.send("/pub/chat/message", {}, JSON.stringify({type: 'TALK', roomId: roomId.value, sender: sender.value, message: message.value}));
                 message.value = '';

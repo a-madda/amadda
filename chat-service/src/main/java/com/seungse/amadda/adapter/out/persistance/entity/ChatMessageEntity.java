@@ -1,5 +1,6 @@
 package com.seungse.amadda.adapter.out.persistance.entity;
 
+import com.seungse.amadda.domain.ChatMessage;
 import com.seungse.amadda.generator.IdGenerator;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,4 +38,13 @@ public class ChatMessageEntity {
      */
     private LocalDateTime sentAt;
 
+    public ChatMessage toChatMessage() {
+        return ChatMessage.builder()
+                .id(id)
+                .roomId(chatRoom.getRoomId().toString())
+                .senderId(senderId)
+                .message(content)
+                .sentAt(sentAt.toString())
+                .build();
+    }
 }
