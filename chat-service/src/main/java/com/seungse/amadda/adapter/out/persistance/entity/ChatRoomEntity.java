@@ -20,6 +20,9 @@ public class ChatRoomEntity {
     @IdGenerator
     private Long id;
 
+    @Column(unique = true)
+    private String roomId;
+
     /**
      * 방 제목 ( 1:1 채팅방의 경우 상대방의 이름 )
      */

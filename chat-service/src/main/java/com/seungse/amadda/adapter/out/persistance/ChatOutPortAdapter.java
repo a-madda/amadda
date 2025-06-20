@@ -1,6 +1,7 @@
 package com.seungse.amadda.adapter.out.persistance;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.seungse.amadda.adapter.out.produce.CreateRoomProducer;
 import com.seungse.amadda.adapter.out.produce.MessageProducer;
 import com.seungse.amadda.application.port.out.ChatOutPort;
 import com.seungse.amadda.domain.ChatMessage;
@@ -25,14 +26,15 @@ import java.util.*;
 public class ChatOutPortAdapter implements ChatOutPort {
 
 
+    private final RedisSubscriber redisSubscriber;
     private final RedisPublisher redisPublisher;
     private final RedisMessageListenerContainer redisMessageListenerContainer;
-    private final RedisSubscriber redisSubscriber;
     private static final String CHAT_ROOM_CHANNEL = "chatRoomChannel";
     private final RedisTemplate<String, Object> redisTemplate;
     private HashOperations<String, String, ChatRoom> hashOperations;
     private final Map<String, ChannelTopic> topics = new LinkedHashMap<>();
     private final MessageProducer messageProducer;
+    private final CreateRoomProducer createRoomProducer;
 
     @PostConstruct
     public void init() {
@@ -40,7 +42,14 @@ public class ChatOutPortAdapter implements ChatOutPort {
     }
 
     public ChatRoom createChatRoom(String name) {
+        log.debug("Creating chat room with name: {}", name);
         ChatRoom chatRoom = ChatRoom.create(name);
+        try {
+            createRoomProducer.produce(chatRoom.getRoomId(), name, null);
+        } catch (JsonProcessingException e) {
+            log.error("Failed to produce chat room creation message", e);
+            throw new RuntimeException(e);
+        }
         hashOperations.put(CHAT_ROOM_CHANNEL, chatRoom.getRoomId(), chatRoom);
         return chatRoom;
     }

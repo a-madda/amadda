@@ -4,12 +4,16 @@ import com.seungse.amadda.adapter.out.persistance.entity.ChatRoomEntity;
 import com.seungse.amadda.adapter.out.persistance.entity.ChatType;
 import com.seungse.amadda.adapter.out.persistance.entity.Participant;
 import com.seungse.amadda.adapter.out.persistance.repository.ChatRoomPostgresRepository;
+import com.seungse.amadda.application.port.out.ChatRoomSaveOutPort;
+import com.seungse.amadda.domain.ChatRoom;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
+@Component
 @RequiredArgsConstructor
-public class ChatRoomOutPortAdapter {
+public class ChatRoomOutPortAdapter implements ChatRoomSaveOutPort {
 
     private final ChatRoomPostgresRepository chatRoomPostgresRepository;
 
@@ -37,4 +41,19 @@ public class ChatRoomOutPortAdapter {
         chatRoomPostgresRepository.save(chatRoomEntity);
     }
 
+    @Override
+    public ChatRoom saveChatRoom(ChatRoom chatRoom, ChatType chatType, Long ownerId) {
+        ChatRoomEntity chatRoomEntity = ChatRoomEntity.builder()
+                .roomId(chatRoom.getRoomId())
+                .name(chatRoom.getName())
+                .chatType(chatType)
+                .createdBy(ownerId)
+                .createdAt(LocalDateTime.now())
+                .build();
+        ChatRoomEntity savedEntity = chatRoomPostgresRepository.save(chatRoomEntity);
+        return ChatRoom.builder()
+                .roomId(savedEntity.getRoomId())
+                .name(savedEntity.getName())
+                .build();
+    }
 }

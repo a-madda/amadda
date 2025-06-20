@@ -15,9 +15,15 @@ spring:
   kafka:
     topic:
       chat: chat-topic
+      chat-room: chat-room-topic
       group: chat-group
     producer:
-      bootstrap-servers: 127.0.0.1:9092
+      bootstrap-servers: 127.0.0.1:19092
     config:
-      bootstrap-servers-config: 127.0.0.1:9092
+      bootstrap-servers-config: 127.0.0.1:19092
       group-id-config: chat-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://127.0.0.1:5432/amadda_chat
+    username: amadda
+    password: amaddapassword
