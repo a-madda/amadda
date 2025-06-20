@@ -1,5 +1,6 @@
 package com.seungse.amadda.adapter.out.persistance.entity;
 
+import com.seungse.amadda.domain.ChatType;
 import com.seungse.amadda.generator.IdGenerator;
 import jakarta.persistence.*;
 import lombok.*;

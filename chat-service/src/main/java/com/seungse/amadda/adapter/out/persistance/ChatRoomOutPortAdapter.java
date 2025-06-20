@@ -1,11 +1,11 @@
 package com.seungse.amadda.adapter.out.persistance;
 
 import com.seungse.amadda.adapter.out.persistance.entity.ChatRoomEntity;
-import com.seungse.amadda.adapter.out.persistance.entity.ChatType;
 import com.seungse.amadda.adapter.out.persistance.entity.Participant;
 import com.seungse.amadda.adapter.out.persistance.repository.ChatRoomPostgresRepository;
 import com.seungse.amadda.application.port.out.ChatRoomSaveOutPort;
 import com.seungse.amadda.domain.ChatRoom;
+import com.seungse.amadda.domain.ChatType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -42,11 +42,11 @@ public class ChatRoomOutPortAdapter implements ChatRoomSaveOutPort {
     }
 
     @Override
-    public ChatRoom saveChatRoom(ChatRoom chatRoom, ChatType chatType, Long ownerId) {
+    public ChatRoom saveChatRoom(ChatRoom chatRoom, Long ownerId) {
         ChatRoomEntity chatRoomEntity = ChatRoomEntity.builder()
                 .roomId(chatRoom.getRoomId())
                 .name(chatRoom.getName())
-                .chatType(chatType)
+                .chatType(chatRoom.getChatType())
                 .createdBy(ownerId)
                 .createdAt(LocalDateTime.now())
                 .build();

@@ -6,6 +6,7 @@ import com.seungse.amadda.adapter.out.produce.MessageProducer;
 import com.seungse.amadda.application.port.out.ChatOutPort;
 import com.seungse.amadda.domain.ChatMessage;
 import com.seungse.amadda.domain.ChatRoom;
+import com.seungse.amadda.domain.ChatType;
 import com.seungse.amadda.domain.MessageType;
 import com.seungse.amadda.infrastructure.publisher.RedisPublisher;
 import com.seungse.amadda.infrastructure.subscriber.RedisSubscriber;
@@ -41,11 +42,11 @@ public class ChatOutPortAdapter implements ChatOutPort {
         hashOperations = redisTemplate.opsForHash();
     }
 
-    public ChatRoom createChatRoom(String name) {
+    public ChatRoom createGroupChatRoom(String name) {
         log.debug("Creating chat room with name: {}", name);
-        ChatRoom chatRoom = ChatRoom.create(name);
+        ChatRoom chatRoom = ChatRoom.create(name, ChatType.GROUP);
         try {
-            createRoomProducer.produce(chatRoom.getRoomId(), name, null);
+            createRoomProducer.produce(chatRoom.getRoomId(), name, ChatType.GROUP, null);
         } catch (JsonProcessingException e) {
             log.error("Failed to produce chat room creation message", e);
             throw new RuntimeException(e);

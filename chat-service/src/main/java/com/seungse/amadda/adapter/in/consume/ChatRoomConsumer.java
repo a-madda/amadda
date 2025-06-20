@@ -22,8 +22,7 @@ public class ChatRoomConsumer {
             // Assuming the message is a JSON string representing a ChatRoom object
             ChatRoom chatRoom = objectMapper.readValue(message, ChatRoom.class);
             log.info("Received room message: {}", chatRoom);
-            com.seungse.amadda.domain.ChatRoom savedChatRoom = chatRoomSaveUsecase.saveChatRoom(chatRoom.getRoomId(), chatRoom.getName(), chatRoom.getOwnerId());
-            log.debug("created chat room: {}", savedChatRoom);
+            log.debug("created chat room: {}", chatRoomSaveUsecase.saveChatRoom(chatRoom.getRoomId(), chatRoom.getName(), chatRoom.getChatType(), chatRoom.getOwnerId()));
         } catch (Exception e) {
             // Handle deserialization or processing errors
             log.error("Error processing room message: {}", e.getMessage(), e);

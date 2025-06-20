@@ -17,8 +17,8 @@ public class ChatService implements ChatUseCase {
     private final ChatOutPort chatOutPort;
 
     @Override
-    public ChatRoom createChatRoom(String name) {
-        return chatOutPort.createChatRoom(name);
+    public ChatRoom createGroupChatRoom(String name) {
+        return chatOutPort.createGroupChatRoom(name);
     }
 
     @Override
