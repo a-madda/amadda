@@ -22,6 +22,10 @@ public class ChatMessage {
      */
     private String roomId;
     /**
+     * 발신자 ID
+     */
+    private Long senderId;
+    /**
      * 발신자
      */
     private String sender;
