@@ -6,4 +6,6 @@ public interface ChatRoomSaveOutPort {
 
     ChatRoom saveChatRoom(ChatRoom chatRoom, Long ownerId);
 
+    void sendMessage(ChatRoom chatRoom);
+
 }

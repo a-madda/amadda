@@ -1,13 +1,16 @@
 package com.seungse.amadda.adapter.out.persistance.entity;
 
+import com.seungse.amadda.domain.ChatMessage;
 import com.seungse.amadda.domain.ChatType;
 import com.seungse.amadda.generator.IdGenerator;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Entity
@@ -22,7 +25,7 @@ public class ChatRoomEntity {
     private Long id;
 
     @Column(unique = true)
-    private String roomId;
+    private UUID roomId;
 
     /**
      * 방 제목 ( 1:1 채팅방의 경우 상대방의 이름 )
@@ -60,18 +63,17 @@ public class ChatRoomEntity {
         participant.enterChatRoom(this);
     }
 
-    public void addMessage(String message, Long sender) {
+    public void addMessage(ChatMessage chatMessage) {
         ChatMessageEntity chatMessageEntity = ChatMessageEntity.builder()
-                .content(message)
-                .senderId(sender)
-                .sentAt(LocalDateTime.now())
+                .content(chatMessage.getMessage())
+                .senderId(chatMessage.getSenderId())
+                .sentAt(LocalDateTime.parse(chatMessage.getSentAt()))
                 .chatRoom(this)
                 .build();
         if (messages == null) {
-            messages = List.of();
+            messages = new ArrayList<>();
         }
         messages.add(chatMessageEntity);
-
     }
 
 }

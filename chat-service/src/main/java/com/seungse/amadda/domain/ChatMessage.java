@@ -1,5 +1,6 @@
 package com.seungse.amadda.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,6 +12,7 @@ import java.time.ZoneOffset;
 @Getter
 @Setter
 @ToString
+@Builder
 public class ChatMessage {
 
     /**
@@ -27,7 +29,9 @@ public class ChatMessage {
     private Long senderId;
     /**
      * 발신자
+     * 임시로 만든 필드로, 추후에는 senderId를 통해 cache 에서 조회 예정
      */
+    @Deprecated
     private String sender;
     /**
      * 메시지 내용
@@ -41,7 +45,7 @@ public class ChatMessage {
     private String sentAt;
 
     public void setSentTime() {
-        this.sentAt = Instant.now().toString();
+        this.sentAt = LocalDateTime.now().toString();
     }
 
 }
