@@ -1,6 +1,7 @@
 package com.seungse.amadda.adapter.out.persistance.entity;
 
 import com.seungse.amadda.generator.IdGenerator;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -27,5 +28,6 @@ public class RegionGroupEntity {
     /**
      * 지역 그룹의 지리적 경계
      */
+    @Column(columnDefinition = "geometry(MultiPolygon, 4326)")
     private Geometry geometry;
 }
