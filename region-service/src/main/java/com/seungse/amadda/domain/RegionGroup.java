@@ -10,6 +10,7 @@ import java.io.Serializable;
 @Builder
 public class RegionGroup implements Serializable {
 
+    private Long regionGroupId;
     private String name;
     private Geometry geometry;
 

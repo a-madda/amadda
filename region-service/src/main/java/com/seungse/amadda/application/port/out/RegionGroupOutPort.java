@@ -1,9 +1,12 @@
 package com.seungse.amadda.application.port.out;
 
+import com.seungse.amadda.domain.RegionGroup;
 import org.locationtech.jts.geom.Geometry;
+
+import java.util.Optional;
 
 public interface RegionGroupOutPort {
 
-    void createRegionGroup(String name, Geometry union);
+    Optional<RegionGroup> createRegionGroup(String name, Geometry union);
 
 }

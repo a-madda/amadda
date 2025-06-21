@@ -1,5 +1,6 @@
 package com.seungse.amadda.adapter.out.persistance.entity;
 
+import com.seungse.amadda.domain.RegionGroup;
 import com.seungse.amadda.generator.IdGenerator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,4 +31,12 @@ public class RegionGroupEntity {
      */
     @Column(columnDefinition = "geometry(MultiPolygon, 4326)")
     private Geometry geometry;
+
+    public RegionGroup toDomain() {
+        return RegionGroup.builder()
+            .regionGroupId(this.id)
+            .name(this.name)
+            .geometry(this.geometry)
+            .build();
+    }
 }
