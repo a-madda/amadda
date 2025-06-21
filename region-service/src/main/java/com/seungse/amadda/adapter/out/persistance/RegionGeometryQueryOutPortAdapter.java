@@ -6,12 +6,12 @@ import com.seungse.amadda.domain.RegionGeometry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Geometry;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Slf4j
-@Repository
+@Component
 @RequiredArgsConstructor
 public class RegionGeometryQueryOutPortAdapter implements RegionGeometryQueryOutPort {
 
