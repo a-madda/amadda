@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface RegionGroupOutPort {
 
-    Optional<RegionGroup> createRegionGroup(String name, Geometry union);
+    Optional<RegionGroup> createRegionGroup(String parentName, String parentCode, String name, String code, Geometry union);
 
 }

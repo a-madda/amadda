@@ -1,6 +1,8 @@
 package com.seungse.amadda.adapter.out.persistance;
 
 import com.seungse.amadda.adapter.out.persistance.entity.RegionGroupEntity;
+import com.seungse.amadda.adapter.out.persistance.entity.RegionGroupGeometryEntity;
+import com.seungse.amadda.adapter.out.persistance.repository.RegionGroupGeometryPostgresRepository;
 import com.seungse.amadda.adapter.out.persistance.repository.RegionGroupPostgresRepository;
 import com.seungse.amadda.application.port.out.RegionGroupOutPort;
 import com.seungse.amadda.domain.RegionGroup;
@@ -15,15 +17,23 @@ import java.util.Optional;
 public class RegionGroupOutPortAdapter implements RegionGroupOutPort {
 
     private final RegionGroupPostgresRepository regionGroupPostgresRepository;
+    private final RegionGroupGeometryPostgresRepository regionGroupGeometryPostgresRepository;
 
     @Override
-    public Optional<RegionGroup> createRegionGroup(String name, Geometry union) {
+    public Optional<RegionGroup> createRegionGroup(String parentName, String parentCode, String name, String code, Geometry union) {
         RegionGroupEntity regionGroupEntity = RegionGroupEntity.builder()
+            .parentName(parentName)
+            .parentCode(parentCode)
             .name(name)
+            .code(code)
+            .build();
+        regionGroupPostgresRepository.save(regionGroupEntity);
+
+        RegionGroupGeometryEntity regionGroupGeometryEntity = RegionGroupGeometryEntity.builder()
+            .regionGroupId(regionGroupEntity.getId())
             .geometry(union)
             .build();
-
-        regionGroupPostgresRepository.save(regionGroupEntity);
+        regionGroupGeometryPostgresRepository.save(regionGroupGeometryEntity);
 
         return Optional.of(regionGroupEntity.toDomain());
     }

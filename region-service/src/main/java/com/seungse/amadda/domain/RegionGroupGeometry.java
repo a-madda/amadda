@@ -8,12 +8,9 @@ import java.io.Serializable;
 
 @Getter
 @Builder
-public class RegionGroup implements Serializable {
+public class RegionGroupGeometry implements Serializable {
 
     private Long regionGroupId;
-    private String parentName;
-    private String parentCode;
-    private String name;
-    private String code;
+    private Geometry geometry;
 
 }

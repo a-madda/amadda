@@ -2,12 +2,10 @@ package com.seungse.amadda.adapter.out.persistance.entity;
 
 import com.seungse.amadda.domain.RegionGroup;
 import com.seungse.amadda.generator.IdGenerator;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
-import org.locationtech.jts.geom.Geometry;
 
 @Getter
 @Entity
@@ -22,21 +20,31 @@ public class RegionGroupEntity {
     private Long id;
 
     /**
+     * 상위 지역 그룹 이름
+     */
+    private String parentName;
+
+    /**
+     * 상위 지역 그룹 코드
+     */
+    private String parentCode;
+
+    /**
      * 지역 그룹 이름
      */
     private String name;
 
     /**
-     * 지역 그룹의 지리적 경계
+     * 지역 그룹 코드
      */
-    @Column(columnDefinition = "geometry(MultiPolygon, 4326)")
-    private Geometry geometry;
+    private String code;
 
     public RegionGroup toDomain() {
         return RegionGroup.builder()
             .regionGroupId(this.id)
+            .parentName(this.parentName)
             .name(this.name)
-            .geometry(this.geometry)
+            .code(this.code)
             .build();
     }
 }
