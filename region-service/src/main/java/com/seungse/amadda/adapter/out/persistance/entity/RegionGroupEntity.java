@@ -42,6 +42,7 @@ public class RegionGroupEntity {
     public RegionGroup toDomain() {
         return RegionGroup.builder()
             .regionGroupId(this.id)
+            .parentCode(this.parentCode)
             .parentName(this.parentName)
             .name(this.name)
             .code(this.code)

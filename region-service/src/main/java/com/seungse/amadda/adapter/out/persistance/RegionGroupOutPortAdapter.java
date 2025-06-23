@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -36,6 +37,14 @@ public class RegionGroupOutPortAdapter implements RegionGroupOutPort {
         regionGroupGeometryPostgresRepository.save(regionGroupGeometryEntity);
 
         return Optional.of(regionGroupEntity.toDomain());
+    }
+
+    @Override
+    public List<RegionGroup> findAllRegionGroups() {
+        return regionGroupPostgresRepository.findAll()
+            .stream()
+            .map(RegionGroupEntity::toDomain)
+            .toList();
     }
 
 }
