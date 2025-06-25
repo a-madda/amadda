@@ -27,7 +27,7 @@ public class ChatRoomSaveService implements ChatRoomSaveUsecase, ChatMessageSave
     public void saveChatMessage(String roomId, Long senderId, String message, String sentAt) {
         ChatRoom chatRoom = ChatRoom.builder().roomId(roomId).build();
         if(!chatRoomSearchOutPort.existsChatRoom(UUID.fromString(roomId))) {
-            new IllegalArgumentException("Chat room not found");
+            throw new IllegalArgumentException("Chat room not found");
         }
         chatRoom.addChat(roomId, senderId, message, sentAt);
         chatRoomSaveOutPort.sendMessage(chatRoom);
