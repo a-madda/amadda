@@ -18,4 +18,5 @@ public interface ChatRoomPostgresRepository extends ChatRoomRepository<ChatRoomE
     boolean existsByRoomId(UUID roomId);
 
     Optional<ChatRoomEntity> findByRoomId(UUID roomId);
+  
 }

@@ -15,10 +15,10 @@ import java.lang.annotation.*;
 public @interface OutPortAdapter {
 
     /**
-     * The value may indicate a suggestion for a logical component name,
+     * The value may indicate a suggestion for a logical component phone,
      * to be turned into a Spring bean in case of an autodetected component.
      *
-     * @return the suggested component name, if any (or empty String otherwise)
+     * @return the suggested component phone, if any (or empty String otherwise)
      */
     @AliasFor(annotation = Component.class)
     String value() default "";
