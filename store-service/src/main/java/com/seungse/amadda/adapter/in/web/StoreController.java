@@ -58,6 +58,14 @@ public class StoreController {
         return ResponseEntity.ok(CreateStoreResponse.toResponse(savedStore));
     }
 
+    @GetMapping("/basic/{storeBasicKey}")
+    public ResponseEntity<StoreBasicKeyResponse> getBasicInfo(@PathVariable("storeBasicKey") String storeBasicKey) {
+        StoreBasicInfo info = storeUseCase.getRedisStore(storeBasicKey)
+            .orElseThrow(() -> new IllegalArgumentException("Store basic info not found: " + storeBasicKey));
+
+        return ResponseEntity.ok(StoreBasicKeyResponse.from(info));
+    }
+
     @GetMapping("/{storeId}")
     public ResponseEntity<ReadStoreResponse> getStore(@PathVariable(value = "storeId") Long storeId) {
         Store store = storeUseCase.getStore(storeId)
