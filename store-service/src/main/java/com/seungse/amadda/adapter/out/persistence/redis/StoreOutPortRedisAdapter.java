@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Duration;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -18,7 +17,7 @@ public class StoreOutPortRedisAdapter implements StoreOutRedisPort {
 
     @Override
     public String saveBasicInfo(StoreBasicInfo storeBasicInfo) {
-        String key = UUID.randomUUID().toString();
+        String key = storeBasicInfo.getStoreBasicKey();
         redisTemplate.opsForValue().set(key, storeBasicInfo, Duration.ofMinutes(30));
         return key;
     }

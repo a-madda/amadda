@@ -13,6 +13,7 @@ import java.io.Serializable;
 @Builder
 public class StoreBasicInfo implements Serializable {
 
+    private String storeBasicKey;
     private String businessNumber;
     private String storeName;
     private Category category;
@@ -22,6 +23,7 @@ public class StoreBasicInfo implements Serializable {
 
     public static StoreBasicInfo from(CreateStoreBasicCommand command) {
         return StoreBasicInfo.builder()
+            .storeBasicKey(command.getStoreBasicKey())
             .businessNumber(command.getBusinessNumber())
             .storeName(command.getStoreName())
             .category(command.getCategory())

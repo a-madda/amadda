@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +25,9 @@ public class StoreService implements StoreUseCase {
 
     @Override
     public String saveBasicInfoToRedis(CreateStoreBasicCommand command) {
+        String storeBasicKey = UUID.randomUUID().toString();
         StoreBasicInfo temp = StoreBasicInfo.from(command);
+        temp.setStoreBasicKey(storeBasicKey);
         return storeOutRedisPort.saveBasicInfo(temp);
     }
 

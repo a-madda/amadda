@@ -33,7 +33,9 @@ public class StoreController {
     @PostMapping("/basic")
     public ResponseEntity<StoreBasicKeyResponse> saveBasicInfo(@RequestBody CreateStoreBasicRequest request) {
         String storeBasicKey = storeUseCase.saveBasicInfoToRedis(request.mapToCommand());
-        return ResponseEntity.ok(StoreBasicKeyResponse.of(storeBasicKey));
+        StoreBasicInfo info = storeUseCase.getRedisStore(storeBasicKey)
+            .orElseThrow(() -> new IllegalArgumentException("BasicKey not found: " + storeBasicKey));
+        return ResponseEntity.ok(StoreBasicKeyResponse.from(info));
     }
 
     /**

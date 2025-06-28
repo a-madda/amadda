@@ -9,6 +9,7 @@ import lombok.Getter;
 @Builder
 public class CreateStoreBasicCommand {
 
+    private String storeBasicKey;
     private String businessNumber;
     private String storeName;
     private Category category;
