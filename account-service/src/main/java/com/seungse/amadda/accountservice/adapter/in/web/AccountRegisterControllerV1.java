@@ -45,7 +45,9 @@ public class AccountRegisterControllerV1 {
      */
     @PostMapping("/login")
     public ResponseEntity<SignInAccountResponse> login(@RequestBody @Valid SignInRequest request) {
-        return ResponseEntity.ok(signInAccountUseCaseV1.loginAccount(request.mapToCommand()).map(SignInAccountResponse::from).orElseThrow(() -> new IllegalArgumentException("로그인에 실패했습니다.")));
+        return ResponseEntity.ok(signInAccountUseCaseV1.loginAccount(request.mapToCommand())
+                .map(SignInAccountResponse::from)
+                .orElseThrow(() -> new IllegalArgumentException("로그인에 실패했습니다.")));
     }
 
 }
