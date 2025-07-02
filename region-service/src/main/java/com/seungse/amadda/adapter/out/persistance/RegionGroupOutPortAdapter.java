@@ -21,7 +21,7 @@ public class RegionGroupOutPortAdapter implements RegionGroupOutPort {
     private final RegionGroupGeometryPostgresRepository regionGroupGeometryPostgresRepository;
 
     @Override
-    public Optional<RegionGroup> createRegionGroup(String parentName, String parentCode, String name, String code, Geometry union) {
+    public Optional<RegionGroup> createRegionGroup(String parentName, String parentCode, String name, String code, Geometry geometry) {
         RegionGroupEntity regionGroupEntity = RegionGroupEntity.builder()
             .parentName(parentName)
             .parentCode(parentCode)
@@ -32,7 +32,7 @@ public class RegionGroupOutPortAdapter implements RegionGroupOutPort {
 
         RegionGroupGeometryEntity regionGroupGeometryEntity = RegionGroupGeometryEntity.builder()
             .regionGroupId(regionGroupEntity.getId())
-            .geometry(union)
+            .geometry(geometry)
             .build();
         regionGroupGeometryPostgresRepository.save(regionGroupGeometryEntity);
 

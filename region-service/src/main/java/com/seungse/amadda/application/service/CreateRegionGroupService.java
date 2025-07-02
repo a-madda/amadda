@@ -31,9 +31,9 @@ public class CreateRegionGroupService implements CreateRegionGroupUseCase {
         // 인접한 지역만 그룹 생성할 수 있도록 조건 추가 필요
 
         List<Geometry> geometries = regionGeometryQueryOutPort.findGeometriesByCodes(command.getRegionCodes());
-        Geometry union = mergeGeometries(geometries);
+        Geometry geometry = mergeGeometries(geometries);
 
-        return regionGroupOutPort.createRegionGroup(command.getParentName(), command.getParentCode(), command.getName(), command.getCode(), union);
+        return regionGroupOutPort.createRegionGroup(command.getParentName(), command.getParentCode(), command.getName(), command.getCode(), geometry);
     }
 
     private Geometry mergeGeometries(List<Geometry> geometries) {
