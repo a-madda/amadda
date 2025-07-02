@@ -14,7 +14,7 @@ public interface ChatUseCase {
      * @param name 채팅방 이름
      * @return 생성된 채팅방 ID
      */
-    ChatRoom createChatRoom(String name);
+    ChatRoom createGroupChatRoom(String name);
 
     /**
      * 채팅방에 참여
@@ -43,5 +43,13 @@ public interface ChatUseCase {
      * @return 채팅방 정보
      */
     Optional<ChatRoom> getChatRoom(String roomId);
+
+    /**
+     * 채팅 메시지 조회
+     *
+     * @param roomId 채팅방 ID
+     * @return 채팅 메시지 목록
+     */
+    List<ChatMessage> getChatMessages(String roomId);
 
 }

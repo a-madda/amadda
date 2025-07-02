@@ -56,7 +56,7 @@
                     } else {
                         const params = new URLSearchParams();
                         params.append("name", room_name.value);
-                        axios.post('/chat/room', params)
+                        axios.post('/chat/room/group', params)
                             .then(
                                 response => {
                                     alert(response.data.name+"방 개설에 성공하였습니다.")

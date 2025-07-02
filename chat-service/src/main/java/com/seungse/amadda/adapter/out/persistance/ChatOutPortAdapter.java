@@ -1,10 +1,12 @@
 package com.seungse.amadda.adapter.out.persistance;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.seungse.amadda.adapter.out.produce.CreateRoomProducer;
 import com.seungse.amadda.adapter.out.produce.MessageProducer;
 import com.seungse.amadda.application.port.out.ChatOutPort;
 import com.seungse.amadda.domain.ChatMessage;
 import com.seungse.amadda.domain.ChatRoom;
+import com.seungse.amadda.domain.ChatType;
 import com.seungse.amadda.domain.MessageType;
 import com.seungse.amadda.infrastructure.publisher.RedisPublisher;
 import com.seungse.amadda.infrastructure.subscriber.RedisSubscriber;
@@ -25,22 +27,30 @@ import java.util.*;
 public class ChatOutPortAdapter implements ChatOutPort {
 
 
+    private final RedisSubscriber redisSubscriber;
     private final RedisPublisher redisPublisher;
     private final RedisMessageListenerContainer redisMessageListenerContainer;
-    private final RedisSubscriber redisSubscriber;
     private static final String CHAT_ROOM_CHANNEL = "chatRoomChannel";
     private final RedisTemplate<String, Object> redisTemplate;
     private HashOperations<String, String, ChatRoom> hashOperations;
     private final Map<String, ChannelTopic> topics = new LinkedHashMap<>();
     private final MessageProducer messageProducer;
+    private final CreateRoomProducer createRoomProducer;
 
     @PostConstruct
     public void init() {
         hashOperations = redisTemplate.opsForHash();
     }
 
-    public ChatRoom createChatRoom(String name) {
-        ChatRoom chatRoom = ChatRoom.create(name);
+    public ChatRoom createGroupChatRoom(String name) {
+        log.debug("Creating chat room with name: {}", name);
+        ChatRoom chatRoom = ChatRoom.create(name, ChatType.GROUP);
+        try {
+            createRoomProducer.produce(chatRoom.getRoomId(), name, ChatType.GROUP, null);
+        } catch (JsonProcessingException e) {
+            log.error("Failed to produce chat room creation message", e);
+            throw new RuntimeException(e);
+        }
         hashOperations.put(CHAT_ROOM_CHANNEL, chatRoom.getRoomId(), chatRoom);
         return chatRoom;
     }

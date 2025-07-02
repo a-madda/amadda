@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ChatOutPort {
 
-    ChatRoom createChatRoom(String name);
+    ChatRoom createGroupChatRoom(String name);
 
     void enterChatRoom(String roomId);
 

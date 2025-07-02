@@ -27,10 +27,10 @@ public class ChatRoomController {
         return chatUseCase.getAllChatRooms();
     }
 
-    @PostMapping("/room")
+    @PostMapping("/room/group")
     @ResponseBody
     public ChatRoom createRoom(@RequestParam(value = "name") String name) {
-        return chatUseCase.createChatRoom(name);
+        return chatUseCase.createGroupChatRoom(name);
     }
 
     /**
