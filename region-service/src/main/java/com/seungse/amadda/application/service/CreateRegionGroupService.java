@@ -5,20 +5,20 @@ import com.seungse.amadda.application.port.in.CreateRegionGroupUseCase;
 import com.seungse.amadda.application.port.out.RegionGeometryQueryOutPort;
 import com.seungse.amadda.application.port.out.RegionGroupOutPort;
 import com.seungse.amadda.domain.RegionGroup;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.geom.Polygon;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class CreateRegionGroupService implements CreateRegionGroupUseCase {
 
     private final RegionGeometryQueryOutPort regionGeometryQueryOutPort;
@@ -26,6 +26,7 @@ public class CreateRegionGroupService implements CreateRegionGroupUseCase {
     private final GeometryFactory geometryFactory = new GeometryFactory();
 
     @Override
+    @Transactional
     public Optional<RegionGroup> createRegionGroup(CreateRegionGroupCommand command) {
         // 인접한 지역만 그룹 생성할 수 있도록 조건 추가 필요
 
