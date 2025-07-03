@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
+
+import java.io.File;
 
 @Slf4j
 @Component
@@ -20,8 +20,11 @@ public class S3Utils {
 
     private final S3Client s3Client;
 
-    public String uploadFile(String directory, String id, MultipartFile file) throws Exception {
-        String key = directory + "/" + id + "/" + file.getOriginalFilename();
+    public String uploadFile(String directory, String id, File file) {
+        if (file == null || !file.exists() || file.length() == 0) {
+            throw new IllegalArgumentException("file not found");
+        }
+        String key = directory + "/" + id + "/" + file.getName();
         log.info("upload key: " + key);
 
         PutObjectRequest request = PutObjectRequest.builder()
@@ -29,7 +32,7 @@ public class S3Utils {
             .key(key)
             .build();
 
-        PutObjectResponse response = s3Client.putObject(request, RequestBody.fromBytes(file.getBytes()));
+        PutObjectResponse response = s3Client.putObject(request, file.toPath());
 
         if (response.sdkHttpResponse().isSuccessful()) {
             return S3Constants.getFileUrl(key);
