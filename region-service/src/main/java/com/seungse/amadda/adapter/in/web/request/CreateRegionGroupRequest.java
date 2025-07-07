@@ -13,9 +13,25 @@ import java.util.List;
 public class CreateRegionGroupRequest {
 
     /**
+     * 상위 지역 그룹 이름
+     */
+    private String parentName;
+
+    /**
+     * 상위 지역 그룹 코드
+     */
+    private String parentCode;
+
+    /**
      * 지역 그룹 이름
      */
     private String name;
+
+    /**
+     * 지역 그룹 코드
+     */
+    private String code;
+
     /**
      * 지역 코드 목록
      */
@@ -23,9 +39,12 @@ public class CreateRegionGroupRequest {
 
     public CreateRegionGroupCommand mapToCommand() {
         return CreateRegionGroupCommand.builder()
-                .name(name)
-                .regionCodes(regionCodes)
-                .build();
+            .parentName(parentName)
+            .parentCode(parentCode)
+            .name(name)
+            .code(code)
+            .regionCodes(regionCodes)
+            .build();
     }
 
 }

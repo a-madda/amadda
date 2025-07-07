@@ -1,4 +1,4 @@
-package com.seungse.amadda.adapter.out.persistance.entity;
+package com.seungse.amadda.domain;
 
 public enum ChatType {
     /**

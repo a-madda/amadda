@@ -2,6 +2,7 @@ package com.seungse.amadda.application.service;
 
 import com.seungse.amadda.application.port.in.ChatUseCase;
 import com.seungse.amadda.application.port.out.ChatOutPort;
+import com.seungse.amadda.application.port.out.ChatRoomSearchOutPort;
 import com.seungse.amadda.domain.ChatMessage;
 import com.seungse.amadda.domain.ChatRoom;
 import lombok.RequiredArgsConstructor;
@@ -9,16 +10,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class ChatService implements ChatUseCase {
 
     private final ChatOutPort chatOutPort;
+    private final ChatRoomSearchOutPort chatRoomSearchOutPort;
+
 
     @Override
-    public ChatRoom createChatRoom(String name) {
-        return chatOutPort.createChatRoom(name);
+    public ChatRoom createGroupChatRoom(String name) {
+        return chatOutPort.createGroupChatRoom(name);
     }
 
     @Override
@@ -41,4 +45,12 @@ public class ChatService implements ChatUseCase {
         return chatOutPort.getChatRoom(roomId);
     }
 
+    @Override
+    public List<ChatMessage> getChatMessages(String roomId) {
+        Optional<ChatRoom> chatRoomById = chatRoomSearchOutPort.findChatRoomById(UUID.fromString(roomId));
+        if (chatRoomById.isPresent()) {
+            return chatRoomById.get().getChats();
+        }
+        return List.of();
+    }
 }

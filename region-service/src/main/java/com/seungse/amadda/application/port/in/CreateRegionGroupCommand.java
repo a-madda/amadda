@@ -11,6 +11,9 @@ import java.util.List;
 @Getter
 @Builder
 public class CreateRegionGroupCommand {
+    private final String parentName;
+    private final String parentCode;
     private final String name;
+    private final String code;
     private final List<String> regionCodes;
 }

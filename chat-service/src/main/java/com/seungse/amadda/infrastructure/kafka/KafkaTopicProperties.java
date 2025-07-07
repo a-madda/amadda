@@ -10,6 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class KafkaTopicProperties {
 
     private String chat;
+    private String chatRoom;
     private String group;
 
 }

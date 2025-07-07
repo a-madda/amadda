@@ -11,12 +11,14 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.geom.Polygon;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CreateRegionGroupService implements CreateRegionGroupUseCase {
 
     private final RegionGeometryQueryOutPort regionGeometryQueryOutPort;
@@ -24,13 +26,14 @@ public class CreateRegionGroupService implements CreateRegionGroupUseCase {
     private final GeometryFactory geometryFactory = new GeometryFactory();
 
     @Override
+    @Transactional
     public Optional<RegionGroup> createRegionGroup(CreateRegionGroupCommand command) {
-        // 3뎁스에서만, 인접한 지역만 그룹 생성할 수 있도록 조건 추가 필요
+        // 인접한 지역만 그룹 생성할 수 있도록 조건 추가 필요
 
         List<Geometry> geometries = regionGeometryQueryOutPort.findGeometriesByCodes(command.getRegionCodes());
-        Geometry union = mergeGeometries(geometries);
+        Geometry geometry = mergeGeometries(geometries);
 
-        return regionGroupOutPort.createRegionGroup(command.getName(), union);
+        return regionGroupOutPort.createRegionGroup(command.getParentName(), command.getParentCode(), command.getName(), command.getCode(), geometry);
     }
 
     private Geometry mergeGeometries(List<Geometry> geometries) {
