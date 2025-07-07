@@ -11,10 +11,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     // https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client
     implementation("org.keycloak:keycloak-admin-client:26.0.5")
-    implementation("org.keycloak:keycloak-authz-client:17.0.1")
+    implementation("org.keycloak:keycloak-authz-client:26.0.5")
 
     testImplementation("org.springframework.security:spring-security-test")
-//    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     annotationProcessor("org.projectlombok:lombok")
     runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
