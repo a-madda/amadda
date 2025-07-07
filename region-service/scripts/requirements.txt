@@ -1,0 +1,4 @@
+geopandas==1.0.1
+SQLAlchemy==2.0.41
+shapely==2.1.1
+python-dotenv==1.1.0
