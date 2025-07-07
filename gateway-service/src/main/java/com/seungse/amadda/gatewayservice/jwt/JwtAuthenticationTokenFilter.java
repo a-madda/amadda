@@ -77,6 +77,7 @@ public class JwtAuthenticationTokenFilter implements GlobalFilter {
             return chain.filter(exchange.mutate().request(mutated).build());
 
         } catch (Exception e) {
+            log.error("Exception occurred while processing token : {}", e.getMessage());
             return unauthorized(exchange);
         }
     }
