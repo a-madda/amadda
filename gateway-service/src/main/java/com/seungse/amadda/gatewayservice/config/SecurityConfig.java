@@ -1,5 +1,7 @@
 package com.seungse.amadda.gatewayservice.config;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -15,35 +17,38 @@ import reactor.core.publisher.Mono;
 import java.nio.charset.StandardCharsets;
 
 @Configuration
+@RequiredArgsConstructor
 @EnableWebFluxSecurity
 public class SecurityConfig {
+
+    private final OAuth2ResourceServerProperties oAuth2ResourceServerProperties;
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, ReactiveJwtDecoder jwtDecoder) {
         http
-            .csrf(c -> c.disable())
-            .authorizeExchange(exchanges -> exchanges
-                .pathMatchers("/api/account/auth/**").permitAll()
-                .pathMatchers("/api/*/actuator/**").permitAll()
-                .anyExchange().authenticated()
-            )
-            .oauth2ResourceServer(oauth2 -> oauth2
-                .jwt(jwtSpec -> jwtSpec.jwtDecoder(jwtDecoder))
-                .authenticationEntryPoint((exchange, ex) -> {
-                    // 401 Unauthorized 응답
-                    ServerHttpResponse response = exchange.getResponse();
-                    response.setStatusCode(HttpStatus.UNAUTHORIZED);
-                    DataBuffer buffer = response.bufferFactory()
-                        .wrap("{\"error\": \"Unauthorized\"}".getBytes(StandardCharsets.UTF_8));
-                    return response.writeWith(Mono.just(buffer));
-                })
-            );
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers("/api/account/auth/**").permitAll()
+                        .pathMatchers("/api/*/actuator/**").permitAll()
+                        .anyExchange().authenticated()
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwtSpec -> jwtSpec.jwtDecoder(jwtDecoder))
+                        .authenticationEntryPoint((exchange, ex) -> {
+                            // 401 Unauthorized 응답
+                            ServerHttpResponse response = exchange.getResponse();
+                            response.setStatusCode(HttpStatus.UNAUTHORIZED);
+                            DataBuffer buffer = response.bufferFactory()
+                                    .wrap("{\"error\": \"Unauthorized\"}".getBytes(StandardCharsets.UTF_8));
+                            return response.writeWith(Mono.just(buffer));
+                        })
+                );
         return http.build();
     }
 
     @Bean
     public ReactiveJwtDecoder jwtDecoder() {
-        return ReactiveJwtDecoders.fromIssuerLocation("http://localhost:8080/realms/amadda");
+        return ReactiveJwtDecoders.fromIssuerLocation(oAuth2ResourceServerProperties.getJwt().getIssuerUri());
     }
 
 }

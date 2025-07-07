@@ -2,54 +2,89 @@ package com.seungse.amadda.gatewayservice.jwt;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.jwk.source.RemoteJWKSet;
+import com.nimbusds.jose.proc.JWSKeySelector;
+import com.nimbusds.jose.proc.JWSVerificationKeySelector;
+import com.nimbusds.jose.proc.SecurityContext;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
+import com.nimbusds.jwt.proc.DefaultJWTProcessor;
 import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
+@RequiredArgsConstructor
 @Component
 public class JwtAuthenticationTokenFilter implements GlobalFilter {
+
+    private static final String AUTH_HEADER = "Authorization";
+    private static final String TOKEN_PREFIX = "Bearer ";
+    private final OAuth2ResourceServerProperties oAuth2ResourceServerProperties;
 
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        return ReactiveSecurityContextHolder.getContext()
-            .map(SecurityContext::getAuthentication)
-            .flatMap(authentication -> {
-                if (authentication.getPrincipal() instanceof Jwt) {
-                    Jwt jwt = (Jwt) authentication.getPrincipal();
 
-                    String userId = jwt.getClaimAsString("sub");
-                    List<String> roles = jwt.getClaim("realm_access") != null
-                        ? ((Map<String, Object>) jwt.getClaim("realm_access")).get("roles") instanceof List
-                        ? (List<String>) ((Map<String, Object>) jwt.getClaim("realm_access")).get("roles")
-                        : List.of()
-                        : List.of();
-                    log.error("userId : {} role : {}", userId, roles);
-                    String token = exchange.getRequest().getHeaders().getFirst("Authorization");
-                    ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
-                        .header("Authorization", token)
-                        .build();
+        String authHeader = exchange.getRequest().getHeaders().getFirst(AUTH_HEADER);
 
-                    return chain.filter(exchange.mutate().request(mutatedRequest).build());
-                }
-                return chain.filter(exchange);
-            }).switchIfEmpty(chain.filter(exchange));
+        if (authHeader == null || !authHeader.startsWith(TOKEN_PREFIX)) {
+            return unauthorized(exchange);
+        }
+
+        String token = authHeader.substring(TOKEN_PREFIX.length());
+
+        try {
+            ConfigurableJWTProcessor<com.nimbusds.jose.proc.SecurityContext> jwtProcessor =
+                    new DefaultJWTProcessor<>();
+
+            JWKSource<SecurityContext> keySource = new RemoteJWKSet<>(
+                    new URL(oAuth2ResourceServerProperties.getJwt().getIssuerUri()));
+
+            JWSKeySelector<SecurityContext> keySelector =
+                    new JWSVerificationKeySelector<>(JWSAlgorithm.RS256, keySource);
+
+            jwtProcessor.setJWSKeySelector(keySelector);
+
+            SecurityContext ctx = null;
+            JWTClaimsSet claims = jwtProcessor.process(token, ctx);
+
+            String userId = claims.getSubject();
+            String email = claims.getStringClaim("email");
+
+            ServerHttpRequest mutated = exchange.getRequest().mutate()
+                    .header("X-User-Id", userId)
+                    .header("X-User-Email", email)
+                    .build();
+
+            return chain.filter(exchange.mutate().request(mutated).build());
+
+        } catch (Exception e) {
+            log.error("Exception occurred while processing token : {}", e.getMessage());
+            return unauthorized(exchange);
+        }
+    }
+
+    private Mono<Void> unauthorized(ServerWebExchange exchange) {
+        exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+        return exchange.getResponse().setComplete();
     }
 
 
